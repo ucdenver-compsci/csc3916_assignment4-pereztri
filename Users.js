@@ -20,6 +20,14 @@ var UserSchema = new Schema({
     password: { type: String, required: true, select: false }
 });
 
+//Added below from HW3
+//User Collection Schema to store user information (this is provided to you in the scaffolding project):
+const UserSchema = new mongoose.Schema({
+    name: String,
+    username: { type: String, unique: true },
+    password: String, // this should be hashed in real-world scenario
+  });
+
 UserSchema.pre('save', function(next) {
     var user = this;
 
