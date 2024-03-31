@@ -14,11 +14,11 @@ try {
 mongoose.set('useCreateIndex', true);
 
 //user schema
-var UserSchema = new Schema({
-    name: String,
-    username: { type: String, required: true, index: { unique: true }},
-    password: { type: String, required: true, select: false }
-});
+// var UserSchema = new Schema({
+//     name: String,
+//     username: { type: String, required: true, index: { unique: true }},
+//     password: { type: String, required: true, select: false }
+// });
 
 //Added below from HW3
 //User Collection Schema to store user information (this is provided to you in the scaffolding project):
