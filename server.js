@@ -130,9 +130,13 @@ router.post('/movies', authJwtController.isAuthenticated, function(req, res)
 //GET route for movies
 router.get('/movies', authJwtController.isAuthenticated, function(req, res)
 {
+    const movieId = req.params.id;
     if (req.query.reviews === 'true')
     {
         Movie.aggregate([
+            {
+                $match: { _id: Mongoose.Types.ObjectId(movieId) } // replace orderId with the actual order id
+            },
             {
                 $lookup: {
                 from: "reviews", // name of the foreign collection
@@ -157,6 +161,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
     else 
     {
         Movie.find({}, function(err, movies)
+        // Movie.findById(movieId, function(err, movies)
         {
             if (err)
             {
