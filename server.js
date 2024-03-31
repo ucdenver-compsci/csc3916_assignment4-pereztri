@@ -209,9 +209,13 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
             {
                 res.send(err);
             }
-            else
+            if (!movie)
             {
                 res.status(404).send({success: false, message: 'The movie record was not found.'});
+            }
+            else
+            {
+                res.json(movie);
             }
         });
     }     
