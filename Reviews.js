@@ -15,7 +15,7 @@ mongoose.connect(process.env.DB);
 // username: name of the reviewer
 // review: the actual review text
 // rating: rating out of five stars given by the reviewer
-const reviewSchema = new mongoose.Schema({
+const ReviewSchema = new mongoose.Schema({
     movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie' },
     username: String,
     review: String,
