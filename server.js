@@ -134,9 +134,6 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
     {
         Movie.aggregate([
             {
-                $match: { _id: orderId } // replace orderId with the actual order id
-            },
-            {
                 $lookup: {
                 from: "reviews", // name of the foreign collection
                 localField: "_id", // field in the orders collection
@@ -144,12 +141,16 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
                 as: "movieReviews" // output array where the joined items will be placed
                 }
             }
-            ]).exec(function(err, result) {
-            if (err) {
+        ]).exec(function(err, movies) 
+        {
+            if (err) 
+            {
+                // handle error
                 res.send(err);
-            // handle error
-            } else {
-                console.log(result);
+            } else 
+            {
+                // console.log(movies);
+                res.json(movies);
             }
         });
     }
@@ -305,22 +306,6 @@ router.post('/reviews', authJwtController.isAuthenticated, function(req, res)
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //GET route for reviews
 router.get('/reviews', authJwtController.isAuthenticated, function(req, res)
 {
@@ -337,43 +322,32 @@ router.get('/reviews', authJwtController.isAuthenticated, function(req, res)
     });
 });
 
-
-
-//DELETE route using the Title for reviews
+//DELETE route using the review id for reviews
 router.delete('/reviews', authJwtController.isAuthenticated, function(req, res)
 {
-    const {title} = req.body; 
+    //Get the id
+    const { id } = req.body; 
 
-    if (!title) 
+    if (!id) 
     {
-        res.status(400).send({success: false, message: 'The title is required to complete the request.'});
+        res.status(400).send({success: false, message: 'The review ID is required to complete the request.'});
     }
-    Movie.findOneAndDelete({title: title}, function(err, movie)
+    Review.findByIdAndRemove(id, function(err, review)
     {
         if (err)
         {
             res.send(err);
         }
-        else if (!movie)
+        else if (!review)
         {
-            res.status(404).send({success: false, message: 'The movie record was not found.'})
+            res.status(404).send({success: false, message: 'The review record was not found.'});
         }
         else
         {
-            res.json({success: true, message: 'The movie was successfully deleted.'});
+            res.json({success: true, message: 'The review was successfully deleted.'});
         }
     });
 });
-
-
-
-
-
-
-
-
-
-
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
