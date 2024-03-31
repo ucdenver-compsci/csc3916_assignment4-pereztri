@@ -87,7 +87,7 @@ router.post('/signin', function (req, res) {
     })
 });
 
-//POST route
+//POST route for movies
 router.post('/movies', authJwtController.isAuthenticated, function(req, res)
 {
     if (!req.body.title || !req.body.releaseDate || !req.body.genre || !req.body.actors || req.body.actors.length === 0)
@@ -111,20 +111,62 @@ router.post('/movies', authJwtController.isAuthenticated, function(req, res)
     }
 });
 
-//GET route
+//GET route for movies
+// router.get('/movies', authJwtController.isAuthenticated, function(req, res)
+// {
+//     Movie.find({}, function(err, movies)
+//     {
+//         if (err)
+//         {
+//             res.send(err);
+//         }
+//         else
+//         {
+//             res.json(movies);
+//         }
+//     });
+// });
+
+//GET route for movies
 router.get('/movies', authJwtController.isAuthenticated, function(req, res)
 {
-    Movie.find({}, function(err, movies)
+    if (req.query.reviews === 'true')
     {
-        if (err)
+        Movie.aggregate([
+            {
+                $match: { _id: orderId } // replace orderId with the actual order id
+            },
+            {
+                $lookup: {
+                from: "reviews", // name of the foreign collection
+                localField: "_id", // field in the orders collection
+                foreignField: "movieId", // field in the items collection
+                as: "movieReviews" // output array where the joined items will be placed
+                }
+            }
+            ]).exec(function(err, result) {
+            if (err) {
+                res.send(err);
+            // handle error
+            } else {
+                console.log(result);
+            }
+        });
+    }
+    else 
+    {
+        Movie.find({}, function(err, movies)
         {
-            res.send(err);
-        }
-        else
-        {
-            res.json(movies);
-        }
-    });
+            if (err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.json(movies);
+            }
+        });
+    }     
 });
 
 //PUT route using the ID
@@ -153,7 +195,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
 //     });
 // });
 
-//PUT route using the Title
+//PUT route using the Title for movies
 router.put('/movies', authJwtController.isAuthenticated, function(req, res)
 {
     const {title, ...updateData} = req.body; 
@@ -205,7 +247,7 @@ router.put('/movies', authJwtController.isAuthenticated, function(req, res)
 //     });
 // });
 
-//DELETE route using the Title
+//DELETE route using the Title for movies
 router.delete('/movies', authJwtController.isAuthenticated, function(req, res)
 {
     const {title} = req.body; 
@@ -231,6 +273,37 @@ router.delete('/movies', authJwtController.isAuthenticated, function(req, res)
     });
 });
 
+//POST route for reviews
+router.post('/reviews', authJwtController.isAuthenticated, function(req, res)
+{
+    if (!req.body.movieId || !req.body.username || req.body.review == null || req.body.rating == null)
+    {
+        res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, user name, review, and rating.'});
+    } 
+    else 
+    {
+        var review = new Review(req.body);
+        // var review = new Review(
+        //     {
+        //         movieId: req.body.movieId, 
+        //         username: req.body.username, 
+        //         review: req.body.review,
+        //         rating: req.body.rating
+        //     }
+        // );
+        review.save(function(err)
+        {
+            if (err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.json({success: true, message: 'Review created!'});
+            }
+        });
+    }
+});
 
 
 
@@ -245,6 +318,52 @@ router.delete('/movies', authJwtController.isAuthenticated, function(req, res)
 
 
 
+
+
+
+//GET route for reviews
+router.get('/reviews', authJwtController.isAuthenticated, function(req, res)
+{
+    Review.find({}, function(err, reviews)
+    {
+        if (err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.json(reviews);
+        }
+    });
+});
+
+
+
+//DELETE route using the Title for reviews
+router.delete('/reviews', authJwtController.isAuthenticated, function(req, res)
+{
+    const {title} = req.body; 
+
+    if (!title) 
+    {
+        res.status(400).send({success: false, message: 'The title is required to complete the request.'});
+    }
+    Movie.findOneAndDelete({title: title}, function(err, movie)
+    {
+        if (err)
+        {
+            res.send(err);
+        }
+        else if (!movie)
+        {
+            res.status(404).send({success: false, message: 'The movie record was not found.'})
+        }
+        else
+        {
+            res.json({success: true, message: 'The movie was successfully deleted.'});
+        }
+    });
+});
 
 
 
