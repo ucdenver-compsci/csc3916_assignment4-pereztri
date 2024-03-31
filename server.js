@@ -138,7 +138,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
                 from: "reviews", // name of the foreign collection
                 localField: "_id", // field in the orders collection
                 foreignField: "movieId", // field in the items collection
-                as: "movieReviews" // output array where the joined items will be placed
+                as: "MOVIE REVIEWS" // output array where the joined items will be placed
                 }
             }
         ]).exec(function(err, movies) 
@@ -165,6 +165,53 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
             else
             {
                 res.json(movies);
+            }
+        });
+    }     
+});
+
+//GET route for movies
+router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
+{
+    const movieId = req.params.id;
+    if (req.query.reviews === 'true')
+    {
+        Movie.aggregate([
+            {
+                $match: { _id: mongoose.Types.ObjectId(movieId)} // replace orderId with the actual order id
+            },
+            {
+                $lookup: {
+                from: "reviews", // name of the foreign collection
+                localField: "_id", // field in the orders collection
+                foreignField: "movieId", // field in the items collection
+                as: "MOVIE REVIEWS" // output array where the joined items will be placed
+                }
+            }
+        ]).exec(function(err, movies) 
+        {
+            if (err) 
+            {
+                // handle error
+                res.send(err);
+            } else 
+            {
+                // console.log(movies);
+                res.json(movies);
+            }
+        });
+    }
+    else 
+    {
+        Movie.findById(movieId, function(err, movies)
+        {
+            if (err)
+            {
+                res.send(err);
+            }
+            else
+            {
+                res.status(404).send({success: false, message: 'The movie record was not found.'});
             }
         });
     }     
