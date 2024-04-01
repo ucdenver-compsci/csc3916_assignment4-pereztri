@@ -170,7 +170,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res)
     }     
 });
 
-//GET route for movies
+//GET route for one movie
 router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
 {
     const movieId = req.params.id;
