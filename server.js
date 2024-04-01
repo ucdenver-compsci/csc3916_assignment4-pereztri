@@ -127,7 +127,7 @@ router.post('/movies', authJwtController.isAuthenticated, function(req, res)
 //     });
 // });
 
-//GET route for movies
+//GET route for all movies
 router.get('/movies', authJwtController.isAuthenticated, function(req, res)
 {
     if (req.query.reviews === 'true')
@@ -188,7 +188,7 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
                 as: "MOVIE REVIEWS" // output array where the joined items will be placed
                 }
             }
-        ]).exec(function(err, movies) 
+        ]).exec(function(err, result) 
         {
             if (err) 
             {
@@ -196,20 +196,20 @@ router.get('/movies/:id', authJwtController.isAuthenticated, function(req, res)
                 res.send(err);
             } else 
             {
-                // console.log(movies);
-                res.json(movies);
+                // console.log(result);
+                res.json(result);
             }
         });
     }
     else 
     {
-        Movie.findById(movieId, function(err, movies)
+        Movie.findById(movieId).exec(function(err, movie)
         {
             if (err)
             {
                 res.send(err);
             }
-            if (!movie)
+            else if (!movie)
             {
                 res.status(404).send({success: false, message: 'The movie record was not found.'});
             }
