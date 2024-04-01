@@ -65,3 +65,45 @@ Leverage the Async.js library or mongo $lookup aggregation capability to join th
 - https://cloud.google.com/appengine/docs/flexible/nodejs/integrating-with-analytics
 - https://caolan.github.io/async/index.html
 - https://support.google.com/analytics/answer/2709829
+
+
+## Explanation of your project
+- The project is an API designed for managing a movie database. It manages movies and reviews, both with additional objects of information. 
+
+
+## Installation and usage instructions
+- Run and Fork Postman
+- Send the following requests in order: 
+- 1) SignUp a User (accept) - creates a user
+- 2) SignUp a User 2 (accept) - creates a second user
+- 3) SignIn a User (accept) - signs in the first user created
+- 4) Save movie 1 (accept) - saves a movie into the database
+- 5) Save movie 2 (accept) - saves a movie into the database
+- 6) Save movie 3 (accept) - saves a movie into the database
+- 7) Save movie 4 (accept) - saves a movie into the database
+- 8) Save movie 5 (accept) - saves a movie into the database
+- 9) Save movie 6 (accept) - saves a movie into the database
+- 10) Save movie 7 (accept) - saves a movie into the database
+- 11) GET movies to get the IDs (accept) - gets the list of movies so you can use the movie id for other requests
+- 12) Save review 1 (accept - using movie 7 Gladiator) - saves a review to the movie Gladiator using the movie id
+- 13) Save review 2 (accept - using movie 7 Gladiator) - saves a review to the movie Gladiator using the movie id
+- 14) Save review 1 (Error - No matching ID/movie missing from DB) - tries to save a review but the movie id is not existing
+- 15) Save review 1 (Error -  Missing a required review field) - tries to save a review but the movie id is blank
+- 16) GET movies without the review query parameter (Error -  movie not in the database) - tries to pull a movie but the movie id is not in the database 
+- 17) GET movies without the review query parameter (Accept - one movie only) - pulls a movie successfully but without the reviews
+- 18) GET movies with the review query parameter (accept) - pulls all of the movies and the reviews 
+- 19) GET reviews to get the review ID (accept) - pulls only the reviews to get the review id to delete it in a different request
+- 20) Delete review (accept) - deletes a review using the review id 
+
+
+## Postman Link
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/32601991-50b0cf9f-6059-450e-84fa-368f23053d5a?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D32601991-50b0cf9f-6059-450e-84fa-368f23053d5a%26entityType%3Dcollection%26workspaceId%3Df70b2cfd-36ab-4105-adba-720513baa397#?env%5BTristenPerez-HW4%5D=W3sia2V5IjoiSldUIiwidmFsdWUiOiIiLCJlbmFibGVkIjp0cnVlLCJ0eXBlIjoiYW55Iiwic2Vzc2lvblZhbHVlIjoiSldULi4uIiwic2Vzc2lvbkluZGV4IjowfV0=)
+
+
+## REACT Link
+https://csc3916-react-pereztri-hw4.onrender.com
+
+
+## The environment settings
+- Postman collection name: CSCI3916_HW4
+- Postman environment name: TristenPerez-HW4
