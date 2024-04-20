@@ -328,9 +328,11 @@ router.delete('/movies', authJwtController.isAuthenticated, function(req, res)
 //POST route for reviews
 router.post('/reviews', authJwtController.isAuthenticated, function(req, res)
 {
-    if (!req.body.movieId || !req.body.username || req.body.review == null || req.body.rating == null)
+    // if (!req.body.movieId || !req.body.username || req.body.review == null || req.body.rating == null)
+    if (!req.body.movieId || req.body.review == null || req.body.rating == null)
     {
-        res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, user name, review, and rating.'});
+        // res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, user name, review, and rating.'});
+        res.status(400).send({success: false, message: 'Error: The review does not contain the required information. It is missing a movie ID, review, and rating.'});
     } 
     else 
     {
@@ -399,43 +401,6 @@ router.delete('/reviews', authJwtController.isAuthenticated, function(req, res)
         }
     });
 });
-
-
-
-
-
-
-router.put('/reviews/:id', authJwtController.isAuthenticated, function(req, res) {
-    const reviewId = req.params.id;
-    Review.findById(reviewId, function(err, review) {
-        if (err) {
-            res.send(err);
-        } else if (!review) {
-            res.status(404).send({success: false, message: 'Review not found.'});
-        } else {
-            // Update the review fields with new values
-            review.movieId = req.body.movieId || review.movieId;
-            review.username = req.body.username || review.username;
-            review.review = req.body.review || review.review;
-            review.rating = req.body.rating || review.rating;
-            
-            review.save(function(err) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    res.json({success: true, message: 'Review updated!'});
-                }
-            });
-        }
-    });
-});
-
-
-
-
-
-
-
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
