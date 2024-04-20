@@ -400,6 +400,43 @@ router.delete('/reviews', authJwtController.isAuthenticated, function(req, res)
     });
 });
 
+
+
+
+
+
+router.put('/reviews/:id', authJwtController.isAuthenticated, function(req, res) {
+    const reviewId = req.params.id;
+    Review.findById(reviewId, function(err, review) {
+        if (err) {
+            res.send(err);
+        } else if (!review) {
+            res.status(404).send({success: false, message: 'Review not found.'});
+        } else {
+            // Update the review fields with new values
+            review.movieId = req.body.movieId || review.movieId;
+            review.username = req.body.username || review.username;
+            review.review = req.body.review || review.review;
+            review.rating = req.body.rating || review.rating;
+            
+            review.save(function(err) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({success: true, message: 'Review updated!'});
+                }
+            });
+        }
+    });
+});
+
+
+
+
+
+
+
+
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
